@@ -13,3 +13,8 @@ class LoginForm(FlaskForm):
   email = StringField('Email', validators=[DataRequired()])
   contrasena = PasswordField('Contraseña', validators=[DataRequired()])
   submit = SubmitField('Iniciar sesión')
+  
+class CategoriaMenuForm(FlaskForm):
+  nombre = StringField('Nombre', validators=[DataRequired()])
+  descripcion = StringField('Descripcion', validators=[DataRequired()])
+  submit = SubmitField('Registrar')

@@ -9,8 +9,10 @@ login_manager.init_app(app)
 
 from routes.usuario import usuario_route
 from routes.inicio import inicio
+from routes.menu.categorias import categorias_menu
 app.register_blueprint(usuario_route)
 app.register_blueprint(inicio)
+app.register_blueprint(categorias_menu)
 
 with app.app_context():
   db.create_all()

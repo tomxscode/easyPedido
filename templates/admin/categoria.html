@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Crear categoría{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-6 col-md-4">
+    <div class="card bg-dark text-light mt-5">
+      <div class="card-body">
+        <h2 class="text-center text-light">Crear categoría</h2>
+        <p class="text-center text-light">Creación de categorías para los productos del menú</p>
+
+        <form method="POST">
+
+          {{ form.hidden_tag() }}
+
+          <div class="mb-3">
+            {{ form.nombre.label(class="form-label text-light") }}
+            {{ form.nombre(class="form-control") }}
+          </div>
+
+          <div class="mb-3">
+            {{ form.descripcion.label(class="form-label text-light") }}
+            {{ form.descripcion(class="form-control") }}
+          </div>
+
+          <button class="btn btn-primary btn-block">
+            {{ form.submit(class="btn btn-primary btn-block") }}
+          </button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6 col-md-8">
+    <div class="card bg-dark text-light mt-5">
+      <div class="card-body">
+        <h2 class="text-center text-light">Listar categorías</h2>
+        <div class="container table-responsive">
+          <table class="table">
+            <thead class="thead-light">
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
