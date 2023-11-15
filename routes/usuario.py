@@ -6,6 +6,7 @@ from flask import flash
 from flask import url_for, redirect
 from flask import render_template
 from flask_login import login_user
+from flask_login import logout_user
 
 usuario_route = Blueprint('usuario_route', __name__)
 
@@ -19,7 +20,7 @@ def login():
     if usuario and usuario.contrasena == contrasena:
       login_user(usuario)
       flash("Bienvenido", 'success')
-      return redirect(url_for('usuario_route.login'))
+      return redirect(url_for('inicio.index'))
     else:
       flash("Usuario o contraseña incorrectos", 'danger')
   return render_template('login.html', form=form)
@@ -37,3 +38,9 @@ def registro():
     flash("Usuario registrado correctamente", 'success')
     return redirect(url_for('usuario_route.login'))
   return render_template('registro.html', form=form)
+
+@usuario_route.route('/cerrar_sesion')
+def cerrar_sesion():
+  logout_user()
+  flash("Sesión cerrada correctamente", 'success')
+  return redirect(url_for('usuario_route.login'))
