@@ -6,6 +6,7 @@ from flask_login import login_required
 from flask import url_for
 from flask import render_template
 from flask import flash, redirect
+from flask import request
 
 categorias_menu = Blueprint('categorias_menu', __name__)
 
@@ -20,5 +21,10 @@ def adm_categoria():
     db.session.add(categoria)
     db.session.commit()
     flash("Categoria creada correctamente", 'success')
-    return redirect(url_for('inicio.index'))
-  return render_template('admin/categoria.html', form=form)
+    return redirect(url_for('categorias_menu.adm_categoria'))
+  
+  # Página actual
+  pagina = request.args.get('pagina', 1, type=int)
+  categorias_por_pagina = request.args.get('elementos', 5, type=int)
+  categorias_paginadas = CategoriasMenu.query.paginate(page=pagina, per_page=categorias_por_pagina, error_out=False)
+  return render_template('admin/categoria.html', form=form, categorias_paginadas=categorias_paginadas)

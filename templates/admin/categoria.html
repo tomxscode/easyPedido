@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Crear categoría{% endblock %}
+{% block title %}Administración de categorías{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -46,10 +46,30 @@
                 <th>Acciones</th>
               </tr>
             </thead>
-            <tbody>
-              
+            <tbody class="table-light">
+              {% for categoria in categorias_paginadas %}
+              <tr>
+                <td>{{categoria.id}}</td>
+                <td>{{categoria.nombre}}</td>
+                <td>{{categoria.descripcion}}</td>
+                <td>Acciones</td>
+              </tr>
+              {% endfor %}
             </tbody>
           </table>
+          <ul class="pagination">
+            {% for pag_num in categorias_paginadas.iter_pages() %}
+              {% if pag_num %}
+                {% if categorias_paginadas.page == pag_num %}
+                  <li class="page-item"><span class="page-link">{{ pag_num }}</span></li>
+                {% else %}
+                  <li class="page-item"><a class="page-link" href="{{ url_for('categorias_menu.adm_categoria', pagina=pag_num, elementos=5) }}">{{ pag_num }}</a></li>
+                {% endif %}
+              {% else %}
+                <span class="ellipsis">...</span>
+              {% endif %}
+            {% endfor%}
+          </ul>
         </div>
       </div>
     </div>
