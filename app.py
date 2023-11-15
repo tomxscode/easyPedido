@@ -1,17 +1,14 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from models import db, login_manager
 
 app = Flask(__name__)
 app.secret_key = 'XXXXXX'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+db.init_app(app)
+login_manager.init_app(app)
 
-db = SQLAlchemy(app)
-login_manager = LoginManager(app)
-login_manager.login_view = 'login'
-
-from routes.usuario import usuario
-app.register_blueprint(usuario)
+from routes.usuario import usuario_route
+app.register_blueprint(usuario_route)
 
 with app.app_context():
   db.create_all()

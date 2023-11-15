@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Registro de Usuario{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-6 col-md-8">
+    <div class="card bg-secondary text-light mt-5">
+      <div class="card-body">
+        <h2 class="text-center text-light">Registro de Usuario</h2>
+
+        <form method="POST">
+
+          {{ form.hidden_tag() }}
+
+          <div class="mb-3">
+            {{ form.email.label(class="form-label text-light") }}
+            {{ form.email(class="form-control") }}
+          </div>
+
+          <div class="mb-3">
+            {{ form.usuario.label(class="form-label text-light") }}
+            {{ form.usuario(class="form-control") }}
+          </div>
+
+          <div class="mb-3">
+            {{ form.contrasena.label(class="form-label text-light") }}
+            {{ form.contrasena(class="form-control") }}
+          </div>
+
+          <div class="mb-3">
+            {{ form.confirmar_contrasena.label(class="form-label text-light") }}
+            {{ form.confirmar_contrasena(class="form-control") }}
+          </div>
+
+          <button class="btn btn-primary btn-block">
+            {{ form.submit(class="btn btn-primary btn-block") }}
+          </button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
