@@ -10,6 +10,7 @@ from werkzeug.utils import secure_filename
 from flask import flash
 from flask import url_for
 from flask import render_template
+from flask import request
 
 producto_menu = Blueprint('producto_menu', __name__)
 
@@ -37,4 +38,9 @@ def adm_producto():
     db.session.commit()
     flash("Producto creado correctamente", 'success')
     return redirect(url_for('producto_menu.adm_producto'))
-  return render_template('admin/producto.html', form=form)
+  
+  # Muestro de productos
+  pagina = request.args.get('pagina', 1, type=int)
+  productos_por_pagina = request.args.get('elementos', 5, type=int)
+  productos_paginados = ProductoMenu.query.paginate(page=pagina, per_page=productos_por_pagina, error_out=False)
+  return render_template('admin/producto.html', form=form, productos_paginados=productos_paginados)

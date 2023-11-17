@@ -47,5 +47,51 @@
       </div>
     </div>
   </div>
+  <div class="col-lg-6 col-md-8">
+    <div class="card bg-dark text-light mt-5">
+      <div class="card-body">
+        <h2 class="text-center text-light">Listar poductos</h2>
+        <div class="container table-responsive">
+          <table class="table">
+            <thead class="thead-light">
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="table-light">
+              {% for producto in productos_paginados %}
+              <tr>
+                <td>{{producto.id}}</td>
+                <td>{{producto.nombre}}</td>
+                <td>{{producto.descripcion}}</td>
+                <td>${{producto.precio}}</td>
+                <td>Acciones</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <ul class="pagination">
+            {% for pag_num in productos_paginados.iter_pages() %}
+            {% if pag_num %}
+            {% if productos_paginados.page == pag_num %}
+            <li class="page-item active"><span class="page-link">{{ pag_num }}</span></li>
+            {% else %}
+            <li class="page-item"><a class="page-link"
+                href="{{ url_for('producto_menu.adm_producto', pagina=pag_num, elementos=5) }}">{{ pag_num }}</a>
+            </li>
+            {% endif %}
+            {% else %}
+            <span class="ellipsis">...</span>
+            {% endif %}
+            {% endfor%}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
