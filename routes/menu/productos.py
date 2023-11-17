@@ -52,10 +52,14 @@ def adm_ver_producto(id):
   return render_template('admin/ver_producto.html', producto=producto)
 
 @producto_menu.route('/admin/producto/eliminar/<int:id>', methods=['DELETE'])
+@login_required
 def eliminar_producto(id):
   producto = ProductoMenu.query.get(id)
-  # Eliminar imagen
-  os.remove(os.path.join(os.getcwd(), 'static/images', producto.imagen))
-  db.session.delete(producto)
-  db.session.commit()
-  return jsonify({'success': True})
+  
+  if producto:
+    os.remove(os.path.join(os.getcwd(), 'static/images', producto.imagen))
+    db.session.delete(producto)
+    db.session.commit()
+    return jsonify({'success': True})
+  else:
+    return jsonify({'success': False, 'message': 'El producto no ha sido encontrado'})
