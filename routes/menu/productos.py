@@ -1,4 +1,5 @@
 import os
+import uuid
 from flask import Blueprint, redirect
 from flask_login import login_required
 from models import db
@@ -26,7 +27,9 @@ def adm_producto():
     categoria = form.categoria.data
     descripcion = form.descripcion.data
     imagen = form.imagen.data
-    imagen_filename = secure_filename(imagen.filename)
+    # Asignar el nombre de la imagen al archivo de manera al azar
+    
+    imagen_filename = f"{uuid.uuid4().hex}{os.path.splitext(imagen.filename)[1]}"
     imagen.save(os.path.join(os.getcwd(), 'static/images', imagen_filename))
     
     nuevo_producto = ProductoMenu(nombre=nombre, descripcion=descripcion, precio=precio, imagen=imagen_filename, categoria=categoria)
