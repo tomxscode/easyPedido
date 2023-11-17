@@ -6,4 +6,4 @@ class ProductoMenu(db.Model):
   descripcion = db.Column(db.String(200), nullable=False)
   precio = db.Column(db.Float, nullable=False)
   imagen = db.Column(db.String(200), nullable=False)
-  categoria = db.Column(db.Integer, db.ForeignKey('CategoriasMenu.id'), nullable=False)
+  categoria = db.Column(db.Integer, db.ForeignKey('categorias_menu.id'), nullable=False)

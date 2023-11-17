@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms.validators import DataRequired
-from wtforms import StringField, PasswordField, validators, SubmitField
+from wtforms import StringField, PasswordField, validators, SubmitField, IntegerField
+from flask_wtf.file import FileField, FileAllowed
+from wtforms import SelectField
 
 class RegistroForm(FlaskForm):
   usuario = StringField('Usuario', validators=[DataRequired()])
@@ -17,4 +19,12 @@ class LoginForm(FlaskForm):
 class CategoriaMenuForm(FlaskForm):
   nombre = StringField('Nombre', validators=[DataRequired()])
   descripcion = StringField('Descripcion', validators=[DataRequired()])
+  submit = SubmitField('Registrar')
+  
+class ProductoMenuForm(FlaskForm):
+  nombre = StringField('Nombre', validators=[DataRequired()])
+  descripcion = StringField('Descripcion', validators=[DataRequired()])
+  precio = IntegerField('Precio', validators=[DataRequired()])
+  imagen = FileField('Imagen', validators=[DataRequired(), FileAllowed(['jpg', 'png'], 'Solo se permiten imágenes')])
+  categoria = SelectField('Categoria', coerce=str, validators=[DataRequired()])
   submit = SubmitField('Registrar')
