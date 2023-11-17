@@ -45,9 +45,9 @@ def eliminar_categoria(id):
   if categoria:
     productos_asociados = ProductoMenu.query.filter_by(categoria=categoria.id).first()
     if productos_asociados:
-      return jsonify({'success': False, 'message': 'La categoria tiene productos asociados'}) 
+      return jsonify({'success': False, 'message': 'La categoria tiene productos asociados'}), 400 
     db.session.delete(categoria)
     db.session.commit()
-    return jsonify({'success': True})
+    return jsonify({'success': True}), 200
   else:
-    return jsonify({'success': False, 'message': 'La categoria no ha sido encontrada'})
+    return jsonify({'success': False, 'message': 'La categoria no ha sido encontrada'}), 400

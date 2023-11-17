@@ -20,7 +20,7 @@ function eliminarCategoria(id) {
           if (data.success) {
             Swal.fire({
               title: 'Eliminado!',
-              text: 'El producto fue eliminado con éxito. Espera 2 segundos para continuar...',
+              text: 'La categoría fue eliminada con éxito. Espera 2 segundos para continuar...',
               icon: 'success',
               timer: 2000,
               showConfirmButton: false
