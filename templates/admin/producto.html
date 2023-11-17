@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="row justify-content-center">
-  <div class="col-lg-6 col-md-4">
+  <div class="col-lg-4 col-md-4">
     <div class="card bg-dark text-light mt-5">
       <div class="card-body">
         <h2 class="text-center text-light">Crear producto</h2>
@@ -47,7 +47,7 @@
       </div>
     </div>
   </div>
-  <div class="col-lg-6 col-md-8">
+  <div class="col-lg-8 col-md-8">
     <div class="card bg-dark text-light mt-5">
       <div class="card-body">
         <h2 class="text-center text-light">Listar poductos</h2>
@@ -56,6 +56,7 @@
             <thead class="thead-light">
               <tr>
                 <th>ID</th>
+                <th>Imágen</th>
                 <th>Nombre</th>
                 <th>Descripción</th>
                 <th>Precio</th>
@@ -66,6 +67,9 @@
               {% for producto in productos_paginados %}
               <tr>
                 <td>{{producto.id}}</td>
+                <td>
+                  <img src="{{ url_for('static', filename='images/' + producto.imagen) }}" class="img-fluid" alt="{{producto.nombre}}" style="width: 3rem; height: 3rem;">
+                </td>
                 <td>{{producto.nombre}}</td>
                 <td>{{producto.descripcion}}</td>
                 <td>${{producto.precio}}</td>
