@@ -6,7 +6,7 @@ from flask_login import login_required
 from flask import flash
 from flask import url_for
 from flask import render_template
-from flask import request
+from flask import request, jsonify
 
 mesas = Blueprint('mesas', __name__)
 
@@ -34,4 +34,12 @@ def mesas_admin():
   mesas_por_pagina = request.args.get('elementos', 5, type=int)
   mesas_paginadas = Mesa.query.paginate(page=pagina, per_page=mesas_por_pagina, error_out=False)
   return render_template('admin/mesas.html', form=form, mesas_paginadas=mesas_paginadas)
+
+@mesas.route('/admin/mesa/cambiar_estado/<int:id>', methods=['PUT'])
+@login_required
+def cambiar_estado_mesa(id):
+  mesa = Mesa.query.get(id)
+  mesa.ocupada = not mesa.ocupada
+  db.session.commit()
+  return jsonify({'success': True, 'mesa': mesa.to_dict()})
     
