@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Administración de mesas{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-4 col-md-4">
+    <div class="card bg-dark text-light mt-5">
+      <div class="card-body">
+        <h2 class="text-center text-light">Crear mesas</h2>
+        <p class="text-center text-light">Creación de mesas para la gestión de órdenes</p>
+
+        <form method="POST" enctype="multipart/form-data">
+
+          {{ form.hidden_tag() }}
+
+          <div class="mb-3">
+            {{ form.numero.label(class="form-label text-light") }}
+            {{ form.numero(class="form-control") }}
+          </div>
+
+          <div class="mb-3">
+            {{ form.capacidad.label(class="form-label text-light") }}
+            {{ form.capacidad(class="form-control") }}
+          </div>
+
+          <div class="mb-3">
+            {{ form.estado.label(class="form-label text-light") }}
+            {{ form.estado(class="form-control") }}
+          </div>
+
+          <button class="btn btn-primary btn-block">
+            {{ form.submit(class="btn btn-primary btn-block") }}
+          </button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8 col-md-8">
+    <div class="card bg-dark text-light mt-5">
+      <div class="card-body">
+        <h2 class="text-center text-light">Listar Mesas</h2>
+        <div class="container table-responsive">
+          <table class="table">
+            <thead class="thead-light">
+              <tr>
+                <th>Número</th>
+                <th>Capacidad</th>
+                <th>Detalle</th>
+                <th>Estado</th>
+                <th colspan="3">Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="table-light">
+              {% for mesa in mesas_paginadas %}
+              <tr>
+                <td>{{mesa.numero}}</td>
+                <td>{{mesa.capacidad}}</td>
+                <td>{{mesa.estado}}</td>
+                <td>
+                  {% if mesa.ocupada %}
+                  <span class="badge bg-danger">Ocupada</span>
+                  {% else %}
+                  <span class="badge bg-success">Disponible</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <button type="button" class="btn btn-sm btn-info" onclick="eliminarProducto()">
+                    <i class='bx bx-info-circle'></i>
+                  </button>
+                </td>
+
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <ul class="pagination">
+            {% for pag_num in mesas_paginadas.iter_pages() %}
+            {% if pag_num %}
+            {% if mesas_paginadas.page == pag_num %}
+            <li class="page-item active"><span class="page-link">{{ pag_num }}</span></li>
+            {% else %}
+            <li class="page-item"><a class="page-link"
+                href="{{ url_for('mesas.mesas_admin', pagina=pag_num, elementos=5) }}">{{ pag_num }}</a>
+            </li>
+            {% endif %}
+            {% else %}
+            <span class="ellipsis">...</span>
+            {% endif %}
+            {% endfor%}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ url_for('static', filename='js/producto_menu.js') }}"></script>
+{% endblock %}

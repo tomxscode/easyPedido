@@ -3,6 +3,7 @@ from wtforms.validators import DataRequired
 from wtforms import StringField, PasswordField, validators, SubmitField, IntegerField
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import SelectField
+from wtforms import BooleanField
 
 class RegistroForm(FlaskForm):
   usuario = StringField('Usuario', validators=[DataRequired()])
@@ -27,4 +28,10 @@ class ProductoMenuForm(FlaskForm):
   precio = IntegerField('Precio', validators=[DataRequired()])
   imagen = FileField('Imagen', validators=[DataRequired(), FileAllowed(['jpg', 'png'], 'Solo se permiten imágenes')])
   categoria = SelectField('Categoria', coerce=str, validators=[DataRequired()])
+  submit = SubmitField('Registrar')
+  
+class MesaForm(FlaskForm):
+  numero = IntegerField('Numero', validators=[DataRequired()])
+  capacidad = IntegerField('Capacidad', validators=[DataRequired()])
+  estado = StringField('Estado', validators=[DataRequired()])
   submit = SubmitField('Registrar')
