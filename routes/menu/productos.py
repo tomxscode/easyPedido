@@ -10,7 +10,7 @@ from werkzeug.utils import secure_filename
 from flask import flash
 from flask import url_for
 from flask import render_template
-from flask import request
+from flask import request, jsonify
 
 producto_menu = Blueprint('producto_menu', __name__)
 
@@ -44,3 +44,18 @@ def adm_producto():
   productos_por_pagina = request.args.get('elementos', 5, type=int)
   productos_paginados = ProductoMenu.query.paginate(page=pagina, per_page=productos_por_pagina, error_out=False)
   return render_template('admin/producto.html', form=form, productos_paginados=productos_paginados)
+
+@producto_menu.route('/admin/producto/<int:id>', methods=['POST', 'GET'])
+@login_required
+def adm_ver_producto(id):
+  producto = ProductoMenu.query.get(id)
+  return render_template('admin/ver_producto.html', producto=producto)
+
+@producto_menu.route('/admin/producto/eliminar/<int:id>', methods=['DELETE'])
+def eliminar_producto(id):
+  producto = ProductoMenu.query.get(id)
+  # Eliminar imagen
+  os.remove(os.path.join(os.getcwd(), 'static/images', producto.imagen))
+  db.session.delete(producto)
+  db.session.commit()
+  return jsonify({'success': True})

@@ -59,7 +59,7 @@
                 <th>Nombre</th>
                 <th>Descripción</th>
                 <th>Precio</th>
-                <th>Acciones</th>
+                <th colspan="3">Acciones</th>
               </tr>
             </thead>
             <tbody class="table-light">
@@ -69,7 +69,22 @@
                 <td>{{producto.nombre}}</td>
                 <td>{{producto.descripcion}}</td>
                 <td>${{producto.precio}}</td>
-                <td>Acciones</td>
+                <td>
+                  <button type="button" class="btn btn-sm btn-info" onclick="eliminarProducto({{ producto.id }})">
+                    <i class='bx bx-info-circle'></i>
+                  </button>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-sm btn-warning" onclick="eliminarProducto({{ producto.id }})">
+                    <i class='bx bx-edit'></i>
+                  </button>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-sm btn-danger" onclick="eliminarProducto({{ producto.id }})">
+                    <i class='bx bx-trash'></i>
+                  </button>
+                </td>
+
               </tr>
               {% endfor %}
             </tbody>
@@ -94,4 +109,8 @@
     </div>
   </div>
 </div>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ url_for('static', filename='js/producto_menu.js') }}"></script>
 {% endblock %}
