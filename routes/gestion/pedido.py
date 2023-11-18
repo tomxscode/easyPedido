@@ -53,6 +53,39 @@ def ver(id):
     return producto.nombre if producto else 'Producto no encontrado'
   return render_template('admin/pedido.html', pedido=pedido, productos=productos_pedido, obtener_nombre_producto=obtener_nombre_producto)
 
+@pedido.route('/api/pedidos/producto/cambiar_estado', methods=['PUT'])
+@login_required
+def cambiar_estado_producto():
+  id_pedido_producto = request.json['id']
+  estado_nuevo = request.json['estado']
+  # Obtener pedido_producto por ID
+  pedido_producto = PedidoProducto.query.get(id_pedido_producto)
+  if not pedido_producto:
+    return jsonify({'success': False, 'message': 'El pedido producto no ha sido encontrado'}), 400
+  # Si no se envió el estado, incrementar el estado actual
+  if not estado_nuevo:
+    estado_actual = pedido_producto.estado
+    if estado_actual == 4:
+      return jsonify({'success': False, 'message': 'El pedido producto ya está entregado y no se envió información adicional'}), 400
+    pedido_producto.estado = estado_actual + 1
+    return jsonify({'success': True, 'message': 'Estado actualizado correctamente'}), 200
+  else:
+    # Si el estado nuevo no es válido
+    if estado_nuevo > 4 or estado_nuevo < 1:
+      return jsonify({'success': False, 'message': 'El estado no es válido'}), 400
+    # Si el estado nuevo es igual al actual
+    if estado_nuevo == pedido_producto.estado:
+      return jsonify({'success': False, 'message': 'El estado es el mismo que el actual'}), 400
+    pedido_producto.estado = estado_nuevo
+  db.session.commit()
+  return jsonify({'success': True, 'message': 'Estado actualizado correctamente'}), 200
+
+@pedido.route('/api/pedidos/cambiar_estado', methods=['PUT'])
+@login_required
+def cambiar_estado():
+  id_pedido = request.json['id']
+  estado_nuevo = request.json['estado']
+
 @pedido.route('/api/agregar_producto_pedido/', methods=['POST'])
 @login_required
 def agregar_producto():
