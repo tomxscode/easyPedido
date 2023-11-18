@@ -63,3 +63,17 @@ def eliminar_producto(id):
     return jsonify({'success': True})
   else:
     return jsonify({'success': False, 'message': 'El producto no ha sido encontrado'})
+  
+@producto_menu.route('/api/productos', methods=['GET'])
+@login_required
+def api_productos():
+  productos = ProductoMenu.query.all()
+  productos_json = []
+  for producto in productos:
+    productos_json.append({
+      'id': producto.id,
+      'nombre': producto.nombre,
+      'descripcion': producto.descripcion,
+      'precio': producto.precio
+    })
+  return jsonify(productos_json)
