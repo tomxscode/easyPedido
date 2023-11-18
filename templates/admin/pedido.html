@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Administración de mesas{% endblock %}
+{% block title %}Pedido #{{ pedido.id }}{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -28,10 +28,21 @@
             <tbody class="table-light">
               {% for producto in productos %}
               <tr>
-                <td>{{ producto.producto }}</td>
+                <td>{{ obtener_nombre_producto(producto.producto) }}</td>
                 <td>{{ producto.cantidad }}</td>
                 <td>{{ producto.detalle }}</td>
-                <td>{{ producto.estado }}</td>
+                <td>
+                  {% if producto.estado == 1 %}
+                  <span class="badge badge-info">En espera</span>
+                  {% elif producto.estado == 2%}
+                  <span class="badge badge-info">Preparando</span>
+                  {% elif producto.estado == 3%}
+                  <span class="badge badge-info">Para retirar</span>
+                  {% elif producto.estado == 3%}
+                  <span class="badge badge-info">Entregado</span>
+                  {% endif %}
+
+                </td>
               </tr>
               {% endfor %}
             </tbody>
@@ -55,5 +66,8 @@
 {% endblock %}
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  const PEDIDO_ID = {{ pedido.id }}
+</script>
 <script src="{{ url_for('static', filename='js/producto_orden.js') }}"></script>
 {% endblock %}
