@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Crear nuevo pedido{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-4 col-md-4">
+    <div class="card bg-dark text-light mt-5">
+      <div class="card-body">
+        <h2 class="text-center text-light">Crear pedido</h2>
+        <p class="text-center text-light">Creación de un pedido</p>
+
+        <form method="POST" enctype="multipart/form-data">
+
+          {{ form.hidden_tag() }}
+
+          <div class="mb-3">
+            {{ form.mesa.label(class="form-label text-light") }}
+            {{ form.mesa(class="form-select") }}
+          </div>
+
+          <div class="mb-3">
+            {{ form.detalle.label(class="form-label text-light") }}
+            {{ form.detalle(class="form-control") }}
+            <small>* Este campo es opcional</small>
+          </div>
+
+          <div class="mb-3">
+            {{ form.estado.label(class="form-label text-light") }}
+            {{ form.estado(class="form-control") }}
+          </div>
+
+          <button class="btn btn-primary btn-block">
+            {{ form.submit(class="btn btn-primary btn-block") }}
+          </button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ url_for('static', filename='js/producto_menu.js') }}"></script>
+{% endblock %}

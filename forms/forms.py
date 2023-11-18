@@ -35,3 +35,15 @@ class MesaForm(FlaskForm):
   capacidad = IntegerField('Capacidad', validators=[DataRequired()])
   estado = StringField('Estado', validators=[DataRequired()])
   submit = SubmitField('Registrar')
+  
+class PedidoForm(FlaskForm):
+  detalle = StringField('Detalle')
+  estado = SelectField('Estado', validators=[DataRequired()], coerce=str, choices=['Atendido', 'Atendiendo', 'Preparando', 'Finalizado', 'En espera'])
+  mesa = SelectField('Mesa', coerce=str, validators=[DataRequired()])
+  submit = SubmitField('Registrar')
+  
+class PedidoProductoForm(FlaskForm):
+  cantidad = IntegerField('Cantidad', validators=[DataRequired()])
+  producto = SelectField('Producto', coerce=str, validators=[DataRequired()])
+  detalle = StringField('Detalle')
+  submit = SubmitField('Registrar')
