@@ -74,6 +74,23 @@ def api_productos():
       'id': producto.id,
       'nombre': producto.nombre,
       'descripcion': producto.descripcion,
+      'imagen': producto.imagen,
       'precio': producto.precio
     })
   return jsonify(productos_json)
+
+@producto_menu.route('/api/productos/<int:id>', methods=['GET'])
+@login_required
+def api_ver_producto(id):
+  producto = ProductoMenu.query.get(id)
+  if producto:
+    return jsonify({
+      'id': producto.id,
+      'nombre': producto.nombre,
+      'descripcion': producto.descripcion,
+      'precio': producto.precio,
+      'imagen': producto.imagen,
+      'success': True
+    })
+  else:
+    return jsonify({'success': False, 'message': 'El producto no ha sido encontrado'})
