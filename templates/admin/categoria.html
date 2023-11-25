@@ -53,9 +53,9 @@
                 <td>{{categoria.nombre}}</td>
                 <td>{{categoria.descripcion}}</td>
                 <td>
-                  <button type="button" class="btn btn-sm btn-info" onclick="eliminar()">
+                  <a href="{{ url_for('categorias_menu.ver_categoria', id=categoria.id) }}" class="btn btn-sm btn-info">
                     <i class='bx bx-info-circle'></i>
-                  </button>
+                  </a>
                 </td>
                 <td>
                   <button type="button" class="btn btn-sm btn-warning" onclick="eliminar()">

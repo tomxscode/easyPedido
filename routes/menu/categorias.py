@@ -35,7 +35,19 @@ def adm_categoria():
 @categorias_menu.route('/admin/categoria/<int:id>', methods=['POST', 'GET'])
 @login_required
 def ver_categoria(id):
-  return "Ver categoria"
+  # Obtener la categoría por ID
+  categoria = CategoriasMenu.query.get(id)
+  if not categoria:
+    flash("La categoria no ha sido encontrada", 'danger')
+    return redirect(url_for('categorias_menu.adm_categoria'))
+  
+  # Obtener los productos asociados a la categoría
+  productos = ProductoMenu.query.filter_by(categoria=categoria.id).all()
+  if not productos:
+    flash("No hay productos asociados a esta categoría", 'warning')
+  
+  
+  return render_template('/admin/ver_categoria.html', categoria=categoria, productos=productos)
 
 @categorias_menu.route('/admin/categoria/eliminar/<int:id>', methods=['DELETE'])
 @login_required

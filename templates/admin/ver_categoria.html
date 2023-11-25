@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}{{ categoria.nombre }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-6 col-md-12">
+    <div class="card bg-dark text-light mt-5">
+      <div class="card-body">
+        <h2 class="text-center text-light">Categoría: {{categoria.nombre}}</h2>
+        <p class="text-center text-light">"{{categoria.descripcion}}"</p>
+
+        <ul class="list-group">
+          {% for producto in productos %}
+          <li class="list-group-item d-flex justify-content-between">
+            <div>
+              {{ producto.nombre }}
+              <span style="color: darkgreen; font-weight: bold;">${{producto.precio}}</span>
+            </div>
+            <div>
+              <button class="btn btn-info btn-sm"><i class='bx bxs-detail'></i></button>
+            </div>
+          
+          </li>
+          {% endfor %}
+        </ul>        
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ url_for('static', filename='js/categoria.js') }}"></script>
+{% endblock %}
