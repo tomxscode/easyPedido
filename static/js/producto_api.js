@@ -40,7 +40,14 @@ function verProducto(id) {
         });
 
       } else {
-        console.log(data)
+        // Mostrar un SweetAlert de error
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'El producto no existe o no tienes acceso a el',
+          showConfirmButton: false,
+          timer: 3000
+        });
       }
     })
     .catch(error => console.log(error))
