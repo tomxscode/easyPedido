@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Pedido{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-6 col-md-12">
+    <div class="card bg-dark text-light mt-5">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table">
+            <thead class="thead-light">
+              <tr>
+                <th>Número</th>
+                <th>Fecha</th>
+                <th>Mesa</th>
+                <th>Detalle</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody class="table-light">
+              {% for pedido in pedidos_filtrados_paginados %}
+              <tr>
+                <td>
+                  {{ pedido.id }}
+                </td>
+                <td>
+                  {{ formatear_fecha(pedido.fecha) }}
+                </td>
+                <td>
+                  {{ obtener_numero_mesa(pedido.mesa) }}
+                </td>
+                <td>
+                  {{ pedido.detalle }}
+                </td>
+                <td>
+                  {{ pedido.estado }}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <ul class="pagination">
+            {% for pag_num in pedidos_filtrados_paginados.iter_pages() %}
+                {% if pag_num %}
+                    {% if pedidos_filtrados_paginados.page == pag_num %}
+                        <li class="page-item active"><span class="page-link">{{ pag_num }}</span></li>
+                    {% else %}
+                        <li class="page-item">
+                          <a class="page-link" href="{{ url_for('pedido.ver_todos', pagina=pag_num, elementos=pedidos_filtrados_paginados.per_page, estado=request.args.get('estado')) }}">{{ pag_num }}</a>
+                        </li>
+                    {% endif %}
+                {% else %}
+                    <span class="ellipsis">...</span>
+                {% endif %}
+            {% endfor %}
+        </ul>        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}

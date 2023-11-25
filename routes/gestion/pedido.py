@@ -112,3 +112,27 @@ def agregar_producto():
   db.session.add(producto_pedido_nuevo)
   db.session.commit()
   return jsonify({'success': True, 'message': 'Producto agregado correctamente'})
+
+@pedido.route('/admin/pedidos', methods=['GET'])
+@login_required
+def ver_todos():
+  pagina = request.args.get('pagina', 1, type=int)
+  estado = request.args.get('estado', 0, type=int)
+  pedidos_por_pagina = request.args.get('elementos', 5, type=int)
+
+  if estado == 0:
+      pedidos_filtrados_paginados = Pedido.query.paginate(page=pagina, per_page=pedidos_por_pagina, error_out=False)
+  else:
+      estados = {1: 'En espera', 2: 'Atendiendo', 3: 'Atendido', 4: 'Preparando', 5: 'Finalizado'}
+      estado_final = estados.get(estado, '')
+      pedidos_filtrados_paginados = Pedido.query.filter_by(estado=estado_final).paginate(page=pagina, per_page=pedidos_por_pagina, error_out=False)
+      
+  def obtener_numero_mesa(id_mesa):
+    mesa = Mesa.query.get(id_mesa)
+    return mesa.numero if mesa else 'Mesa no encontrada'
+  
+  def formatear_fecha(fecha):
+    # Darle el formato a la fecha (ejemplo de input: 2023-11-18 01:48:50.746162), devolver: 18/11/2023 01:48AM o PM
+    return fecha.strftime('%d/%m/%Y %I:%M%p') if fecha else ''
+
+  return render_template('admin/pedidos.html', pedidos_filtrados_paginados=pedidos_filtrados_paginados, obtener_numero_mesa=obtener_numero_mesa, formatear_fecha=formatear_fecha)
