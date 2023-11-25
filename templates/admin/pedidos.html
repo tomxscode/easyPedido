@@ -16,6 +16,7 @@
                 <th>Mesa</th>
                 <th>Detalle</th>
                 <th>Estado</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody class="table-light">
@@ -35,6 +36,11 @@
                 </td>
                 <td>
                   {{ pedido.estado }}
+                </td>
+                <td>
+                  <a href="{{ url_for('pedido.ver', id=pedido.id) }}" class="btn btn-sm btn-info">
+                    <i class='bx bx-show'></i>
+                  </a>
                 </td>
               </tr>
               {% endfor %}
