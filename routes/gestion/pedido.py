@@ -24,7 +24,7 @@ def crear():
   
   if form.validate_on_submit():
     detalle = form.detalle.data
-    estado = form.estado.data
+    estado = "Abierto"
     mesa = form.mesa.data
     
     # Buscar la mesa por la ID y obtener la celda ocupada
@@ -53,6 +53,31 @@ def ver(id):
     return producto.nombre if producto else 'Producto no encontrado'
   return render_template('admin/pedido.html', pedido=pedido, productos=productos_pedido, obtener_nombre_producto=obtener_nombre_producto)
 
+@pedido.route('/admin/pedidos', methods=['GET'])
+@login_required
+def ver_todos():
+  pagina = request.args.get('pagina', 1, type=int)
+  estado = request.args.get('estado', 0, type=int)
+  pedidos_por_pagina = request.args.get('elementos', 5, type=int)
+
+  if estado == 0:
+      pedidos_filtrados_paginados = Pedido.query.paginate(page=pagina, per_page=pedidos_por_pagina, error_out=False)
+  else:
+      estados = {1: 'Abierto', 2: 'Cerrado'}
+      estado_final = estados.get(estado, '')
+      pedidos_filtrados_paginados = Pedido.query.filter_by(estado=estado_final).paginate(page=pagina, per_page=pedidos_por_pagina, error_out=False)
+      
+  def obtener_numero_mesa(id_mesa):
+    mesa = Mesa.query.get(id_mesa)
+    return mesa.numero if mesa else 'Mesa no encontrada'
+  
+  def formatear_fecha(fecha):
+    # Darle el formato a la fecha (ejemplo de input: 2023-11-18 01:48:50.746162), devolver: 18/11/2023 01:48AM o PM
+    return fecha.strftime('%d/%m/%Y %I:%M%p') if fecha else ''
+
+  return render_template('admin/pedidos.html', pedidos_filtrados_paginados=pedidos_filtrados_paginados, obtener_numero_mesa=obtener_numero_mesa, formatear_fecha=formatear_fecha)
+
+# API PEDIDOS
 @pedido.route('/api/pedidos/producto/cambiar_estado', methods=['PUT'])
 @login_required
 def cambiar_estado_producto():
@@ -84,7 +109,25 @@ def cambiar_estado_producto():
 @login_required
 def cambiar_estado():
   id_pedido = request.json['id']
+  # Obtener el pedido según el id entregado
+  pedido = Pedido.query.get(id_pedido)
+  if not pedido:
+    return jsonify({'success': False, 'message': 'El pedido no ha sido encontrado'}), 400
+  # Obtener el estado nuevo desde el request, si no se envió entonces hacer otra cosa
   estado_nuevo = request.json['estado']
+  if not estado_nuevo:
+    if pedido.estado == 'Cerrado':
+      pedido.estado = 'Abierto'
+    else:
+      pedido.estado = 'Cerrado'
+  else:
+    # Comprobar que el estado nuevo solo sea Abierto o Cerrado
+    if estado_nuevo != 'Abierto' and estado_nuevo != 'Cerrado':
+      return jsonify({'success': False, 'message': 'El estado no es válido'}), 400
+    pedido.estado = estado_nuevo
+    
+  db.session.commit()
+  return jsonify({'success': True, 'message': 'Estado actualizado correctamente', 'estado_nuevo': pedido.estado}), 200
 
 @pedido.route('/api/agregar_producto_pedido/', methods=['POST'])
 @login_required
@@ -113,26 +156,27 @@ def agregar_producto():
   db.session.commit()
   return jsonify({'success': True, 'message': 'Producto agregado correctamente'})
 
-@pedido.route('/admin/pedidos', methods=['GET'])
-@login_required
-def ver_todos():
-  pagina = request.args.get('pagina', 1, type=int)
-  estado = request.args.get('estado', 0, type=int)
-  pedidos_por_pagina = request.args.get('elementos', 5, type=int)
-
-  if estado == 0:
-      pedidos_filtrados_paginados = Pedido.query.paginate(page=pagina, per_page=pedidos_por_pagina, error_out=False)
-  else:
-      estados = {1: 'En espera', 2: 'Atendiendo', 3: 'Atendido', 4: 'Preparando', 5: 'Finalizado'}
-      estado_final = estados.get(estado, '')
-      pedidos_filtrados_paginados = Pedido.query.filter_by(estado=estado_final).paginate(page=pagina, per_page=pedidos_por_pagina, error_out=False)
-      
-  def obtener_numero_mesa(id_mesa):
-    mesa = Mesa.query.get(id_mesa)
-    return mesa.numero if mesa else 'Mesa no encontrada'
-  
-  def formatear_fecha(fecha):
-    # Darle el formato a la fecha (ejemplo de input: 2023-11-18 01:48:50.746162), devolver: 18/11/2023 01:48AM o PM
-    return fecha.strftime('%d/%m/%Y %I:%M%p') if fecha else ''
-
-  return render_template('admin/pedidos.html', pedidos_filtrados_paginados=pedidos_filtrados_paginados, obtener_numero_mesa=obtener_numero_mesa, formatear_fecha=formatear_fecha)
+@pedido.route('/api/cocina/pedidos/ver_pedido/<int:id>', methods=['GET'])
+#@login_required
+def cocina_ver_pedido(id):
+  # Buscar el pedido por el ID
+  pedido = Pedido.query.get(id)
+  if not pedido:
+    return jsonify({'success': False, 'message': 'El pedido no ha sido encontrado'})
+  # Buscar los productos del pedido
+  productos_pedido = PedidoProducto.query.filter_by(pedido=id).all()
+  productos_json = []
+  for producto in productos_pedido:
+    # Obtener el nombre del producto
+    producto_encontrado = ProductoMenu.query.get(producto.producto)
+    producto_nombre = producto_encontrado.nombre if producto_encontrado else 'Producto no encontrado'
+    productos_json.append({
+      'id': producto.id,
+      'cantidad': producto.cantidad,
+      'producto': producto.producto,
+      'detalle': producto.detalle,
+      'estado': producto.estado,
+      'nombre': producto_nombre
+    })
+    
+  return jsonify({'success': True, 'pedido': pedido.id, 'estado': pedido.estado, 'productos': productos_json}), 200

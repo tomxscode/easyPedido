@@ -38,7 +38,6 @@ class MesaForm(FlaskForm):
   
 class PedidoForm(FlaskForm):
   detalle = StringField('Detalle')
-  estado = SelectField('Estado', validators=[DataRequired()], coerce=str, choices=['Atendido', 'Atendiendo', 'Preparando', 'Finalizado', 'En espera'])
   mesa = SelectField('Mesa', coerce=str, validators=[DataRequired()])
   submit = SubmitField('Registrar')
   
