@@ -16,7 +16,7 @@
                 <th>Mesa</th>
                 <th>Detalle</th>
                 <th>Estado</th>
-                <th>Acciones</th>
+                <th colspan="2">Acciones</th>
               </tr>
             </thead>
             <tbody class="table-light">
@@ -32,7 +32,11 @@
                   {{ obtener_numero_mesa(pedido.mesa) }}
                 </td>
                 <td>
+                  {% if pedido.detalle %}
                   {{ pedido.detalle }}
+                  {% else %}
+                  Sin comentarios
+                  {% endif %}
                 </td>
                 <td>
                   {{ pedido.estado }}
@@ -42,25 +46,32 @@
                     <i class='bx bx-show'></i>
                   </a>
                 </td>
+                <td>
+                  <button class="btn btn-sm btn-secondary">
+                    <box-icon name='bowl-hot' size="xs"></box-icon>
+                  </button>
+                </td>
               </tr>
               {% endfor %}
             </tbody>
           </table>
           <ul class="pagination">
             {% for pag_num in pedidos_filtrados_paginados.iter_pages() %}
-                {% if pag_num %}
-                    {% if pedidos_filtrados_paginados.page == pag_num %}
-                        <li class="page-item active"><span class="page-link">{{ pag_num }}</span></li>
-                    {% else %}
-                        <li class="page-item">
-                          <a class="page-link" href="{{ url_for('pedido.ver_todos', pagina=pag_num, elementos=pedidos_filtrados_paginados.per_page, estado=request.args.get('estado')) }}">{{ pag_num }}</a>
-                        </li>
-                    {% endif %}
-                {% else %}
-                    <span class="ellipsis">...</span>
-                {% endif %}
+            {% if pag_num %}
+            {% if pedidos_filtrados_paginados.page == pag_num %}
+            <li class="page-item active"><span class="page-link">{{ pag_num }}</span></li>
+            {% else %}
+            <li class="page-item">
+              <a class="page-link"
+                href="{{ url_for('pedido.ver_todos', pagina=pag_num, elementos=pedidos_filtrados_paginados.per_page, estado=request.args.get('estado')) }}">{{
+                pag_num }}</a>
+            </li>
+            {% endif %}
+            {% else %}
+            <span class="ellipsis">...</span>
+            {% endif %}
             {% endfor %}
-        </ul>        
+          </ul>
         </div>
       </div>
     </div>
